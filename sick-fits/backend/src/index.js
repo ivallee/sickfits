@@ -6,7 +6,7 @@ const db = require('./db');
 
 const server = createServer();
 
-// TODO middleware to handle cookies (JWT)
+server.express.use(cookieParser());
 // TOTO middleware to populate user 
 
 server.start(
