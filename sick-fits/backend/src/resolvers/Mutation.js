@@ -61,11 +61,11 @@ const Mutations = {
   },
   async signin(parent, { email, password }, ctx, info) {
 
-    const user = await ctx.cb.query.user({ where: { email } });
+    const user = await ctx.db.query.user({ where: { email } });
     if (!user) {
       throw new Error(`No user found for email ${email}`);
     }
-    const valid = bcrypt.compare(password, user.password);
+    const valid = await bcrypt.compare(password, user.password);
     if (!valid) {
       throw new Error('Invalid Password');
     }
