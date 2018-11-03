@@ -91,7 +91,7 @@ const Mutations = {
     }
 
     const randomBytesPromisified = promisify(randomBytes);
-    const resetToken = (await randomBytesPromisified(10)).toString('hex');
+    const resetToken = (await randomBytesPromisified(20)).toString('hex');
     const resetTokenExpiry = Date.now() + 3600000;
 
     const res = await ctx.db.mutation.updateUser(
@@ -100,7 +100,6 @@ const Mutations = {
         data: { resetToken, resetTokenExpiry },
       },
     );
-    console.log(res);
     return { message: 'Success!'};
   },
   async resetPassword(parent, args, ctx, info) {
