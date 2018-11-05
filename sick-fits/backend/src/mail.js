@@ -25,4 +25,4 @@ const template = text => `
 `;
 
 exports.transport = transport;
-exports.transport = template;
+exports.template = template;
