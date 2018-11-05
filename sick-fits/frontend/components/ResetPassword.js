@@ -16,7 +16,6 @@ const RESET_PASSWORD_MUTATION = gql`
 `;
 
 class ResetPassword extends Component {
-  static PropTypes = {}
 
   state = {
     password: '',
