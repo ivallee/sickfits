@@ -20,7 +20,6 @@ const Query = {
     if (!ctx.request.userId) {
       throw new Error('You must be logged in');
     }
-    console.log(ctx.request.user)
     hasPermission(ctx.request.user, ['ADMIN', 'PERMISSIONUPDATE']);
 
     return await ctx.db.query.users({}, info);
