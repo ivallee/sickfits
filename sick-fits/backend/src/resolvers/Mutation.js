@@ -45,7 +45,14 @@ const Mutations = {
   },
   async deleteItem(parent, args, ctx, info) {
     const where = { id: args.id };
-    const item = await ctx.db.query.item({ where }, `{ id title }`);
+    const item = await ctx.db.query.item({ where }, `{ id title user { name id } }`);
+
+    const ownsItem = item.user.id === ctx.request.userId;
+    const hasPermission = ctx.request.user.permissions.some(permission => ['ADMIN', 'DELETEITEM'].includes(permission));
+    
+    if (!ownsItem || !hasPermission) {
+      throw new Error('You do not have permission to delete that');
+    }
 
     return ctx.db.mutation.deleteItem({ where }, info);
   },
@@ -177,14 +184,13 @@ const Mutations = {
     );
 
     hasPermission(user, ['ADMIN', 'PERMISSIONUPDATE']);
-    
+
     return await ctx.db.mutation.updateUser({
       where: { id: args.userId },
       data: { 
         permissions: { set: args.permissions },
       }
     }, info);
-
   },
 };
 
