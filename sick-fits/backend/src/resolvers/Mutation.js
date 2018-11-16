@@ -171,7 +171,7 @@ const Mutations = {
     // 8. return user
     return updatedUser;
   },
-  async updatePermissions(parent, args, ctx, info){
+  async updatePermissions(parent, args, ctx, info) {
     if (!ctx.request.userId) {
       throw new Error('You must be logged in');
     }
@@ -192,6 +192,48 @@ const Mutations = {
       }
     }, info);
   },
+  async addToCart(parent, args, ctx, info) {
+    // check if logged in
+    const { userId } = ctx.request;
+    if (!userId) {
+      throw new Error('You must be logged in');
+    }
+    // check if cartItem exists
+    const [existingCartItem] = await ctx.db.query.cartItems(
+      {
+        where: {
+          user: { id: userId },
+          item: { id: args.id }, 
+        },
+      }, 
+      info
+    );
+      // if so, add to quantity to cartItem
+    if (existingCartItem) {
+      return ctx.db.mutation.updateCartItem(
+        {
+          where: { id: existingCartItem.id },
+          data: { quantity: existingCartItem.quantity + 1 },
+        },
+        info
+      );
+    }
+    return ctx.db.mutation.createCartItem(
+      {
+        data: {
+          user: {
+            connect: { id: userId },
+          },
+          item: {
+            connect: { id: args.id },
+          },
+        },
+      },
+      info
+    );
+    // create cartItem
+    
+  }
 };
 
 module.exports = Mutations;
