@@ -193,12 +193,10 @@ const Mutations = {
     }, info);
   },
   async addToCart(parent, args, ctx, info) {
-    // check if logged in
     const { userId } = ctx.request;
     if (!userId) {
       throw new Error('You must be logged in');
     }
-    // check if cartItem exists
     const [existingCartItem] = await ctx.db.query.cartItems(
       {
         where: {
@@ -208,7 +206,6 @@ const Mutations = {
       }, 
       info
     );
-      // if so, add to quantity to cartItem
     if (existingCartItem) {
       return ctx.db.mutation.updateCartItem(
         {
@@ -231,8 +228,22 @@ const Mutations = {
       },
       info
     );
-    // create cartItem
+  },
+  async removeFromCart(parent, args, ctx, info) {
+
+    const cartItem = await ctx.db.query.cartItem({
+      where: {
+        id: args.id,
+      }
+    }, `{ id, user { id } }`);
+    if (!cartItem) throw new Error('No item found');
+    if (cartItem.user.id !== ctx.request.userId) throw new Error('Not yours!');
     
+    return ctx.db.mutation.deleteCartItem({
+      where: { id: args.id }
+    },
+    info
+    );
   }
 };
 
