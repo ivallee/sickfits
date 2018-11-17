@@ -33,7 +33,7 @@ const CartItem = ({ cartItem }) => (
         </em>
       </p>
     </div>
-    <RemoveFromCart id={cartItem.item.id} />
+    <RemoveFromCart id={cartItem.id} />
   </CartItemStyles>
 );
 
