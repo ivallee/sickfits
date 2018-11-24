@@ -14,6 +14,10 @@ function totalItems(cart) {
 }
 
 class TakeMyMoney extends Component {
+  onToken = res => {
+    console.log('On token called');
+    console.log(res.id);
+  }
   render(){
     return (
       <User>
