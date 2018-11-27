@@ -5,8 +5,9 @@ import { format } from 'date-fns';
 import Head from 'next/head';
 import gql from 'graphql-tag';
 import formatMoney from '../lib/formatMoney';
-import Error from './ErrorMessage';
 import OrderStyles from './styles/OrderStyles';
+import Error from './ErrorMessage';
+import OrderItem from './OrderItem';
 
 const SINGLE_ORDER_QUERY = gql`
   query SINGLE_ORDER_QUERY($id: ID!){
@@ -64,9 +65,7 @@ class Order extends Component {
             </p>
             <div>
               {order.items.map(item => (
-                <div className="order-item" key={item.id}>
-                  
-                </div>
+                <OrderItem item={item}/>
               ))}
             </div>
           </OrderStyles>
