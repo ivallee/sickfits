@@ -23,6 +23,18 @@ const Query = {
     hasPermission(ctx.request.user, ['ADMIN', 'PERMISSIONUPDATE']);
 
     return await ctx.db.query.users({}, info);
+  },
+  async order(parent, args, ctx, info) {
+    if (!ctx.request.userId) throw new Error('You must be logged in');
+
+    const order = await ctx.db.query.order({ where: { id: args.id } }, info);
+
+    const ownsOrder = order.user.id === ctx.request.userId;
+    const hasPermission = ctx.request.user.permissions.includes('ADMIN');
+
+    if (!ownsOrder || !hasPermission) throw new Error('You do not have the correct permission');
+
+    return order;
   }
 };
 
