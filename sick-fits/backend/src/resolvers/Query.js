@@ -35,7 +35,17 @@ const Query = {
     if (!ownsOrder || !hasPermission) throw new Error('You do not have the correct permission');
 
     return order;
-  }
-};
+  },
+  async orders(parent, args, ctx, info) {
+    const { userId } = ctx.request;
+    if (!userId) throw new Error('You must be logged in');
+    
+    return await ctx.db.query.orders({
+      where: {
+        user: { id: userId }
+      }
+    }, info);
+  },
+}; 
 
 module.exports = Query;
