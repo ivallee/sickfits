@@ -57,7 +57,7 @@ class OrderList extends Component {
                         <div className="order-meta"> 
                           <p>{order.items.reduce((a,b) => a + b.quantity, 0)} items </p>
                           <p>{order.items.length}</p>
-                          <p>{formatDistance(order.createdAt, new Date())}</p>
+                          <p>{formatDistance(order.createdAt, new Date())} ago</p>
                           <p>{formatMoney(order.total)}</p>
                         </div>
                         <div className="images">
