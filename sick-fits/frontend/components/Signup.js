@@ -18,8 +18,8 @@ const SIGNUP_MUTATION = gql`
 class Signup extends Component {
   state = {
     name: '',
-    password: '',
     email: '',
+    password: '',
   };
 
   saveToState = e => {
@@ -35,11 +35,15 @@ class Signup extends Component {
       >
         {(signup, { error, loading }) => (
 
-        <Form method="post" onSubmit={async e => {
-          e.preventDefault();
-          await signup();
-          this.setState({ name: '', email: '', password: ''});
-        }}>
+        <Form 
+          method="post" 
+          data-test="form"
+          onSubmit={async e => {
+            e.preventDefault();
+            await signup();
+            this.setState({ name: '', email: '', password: ''});
+          }
+        }>
           <fieldset disabled={loading} aria-busy={loading}>
             <h2>Sign Up For an Account</h2>
             <Error error={error} />
@@ -84,3 +88,4 @@ class Signup extends Component {
 }
 
 export default Signup;
+export { SIGNUP_MUTATION };
