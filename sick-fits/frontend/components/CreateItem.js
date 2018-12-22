@@ -3,7 +3,6 @@ import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import Router from 'next/router';
 import Form from './styles/Form';
-import formatMoney from '../lib/formatMoney';
 import Error from './ErrorMessage';
 
 const CREATE_ITEM_MUTATION = gql`
@@ -33,7 +32,7 @@ class CreateItem extends Component {
     description: '',
     image: '',
     largeImage: '',
-    price: 100,
+    price: 0,
   }
 
   handleChange = ({ target }) => {
@@ -64,15 +63,17 @@ class CreateItem extends Component {
     return (
       <Mutation mutation={CREATE_ITEM_MUTATION} variables={this.state}>
         {(createItem, { loading, error }) => (
-          <Form onSubmit={async e => {
-            e.preventDefault();
-            const res = await createItem();
-            console.log(res); 
-            Router.push({
-              pathname: '/item',
-              query: { id: res.data.createItem.id },
-            })
-          }}>
+          <Form 
+            data-test="form"
+            onSubmit={async e => {
+              e.preventDefault();
+              const res = await createItem();
+              Router.push({
+                pathname: '/item',
+                query: { id: res.data.createItem.id },
+              })
+            }
+          }>
             <Error error={error} />
             <fieldset disabled={loading} aria-busy={loading} >
               <label htmlFor='file'>
