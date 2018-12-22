@@ -80,4 +80,24 @@ describe('<AddToCart/>', () => {
     expect(me2.cart[0].id).toBe('omg123');    
     expect(me2.cart[0].quantity).toBe(3);    
   });
+
+  it('changes from add to adding when clicked', async () => {
+    let apolloClient;
+    const wrapper = mount(
+      <MockedProvider mocks={mocks}>
+        <ApolloConsumer>
+          {client => {
+            apolloClient = client;
+            return <AddToCart id='abc123' />
+          }}
+        </ApolloConsumer>
+      </MockedProvider>
+    );
+    await wait();
+    wrapper.update();
+    expect(wrapper.text()).toContain('Add to Cart 🛍️');
+    wrapper.find('button').simulate('click');
+    expect(wrapper.text()).toContain('Adding to Cart 🛍️');
+    
+  });
 });
