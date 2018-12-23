@@ -3,7 +3,6 @@ import StripeCheckout from 'react-stripe-checkout';
 import { Mutation } from 'react-apollo';
 import Router from 'next/router';
 import NProgress from 'nprogress';
-import PropTypes from 'prop-types';
 import gql from 'graphql-tag';
 import calcTotalPrice from '../lib/calcTotalPrice';
 import Error from './ErrorMessage';
@@ -30,8 +29,6 @@ function totalItems(cart) {
 class TakeMyMoney extends Component {
   onToken = async (res, createOrder) => {
     NProgress.start();
-    console.log('On token called');
-    console.log(res.id);
     const order = await createOrder({
       variables: {
         token: res.id,
@@ -47,13 +44,15 @@ class TakeMyMoney extends Component {
   render(){
     return (
       <User>
-        {({ data: { me } }) => (
-          <Mutation 
+        {({ data: { me }, loading }) => {
+          if (loading) return null;
+          return (
+            <Mutation 
             mutation={CREATE_ORDER_MUTATION}
             refetchQueries={[{ query: CURRENT_USER_QUERY }]}  
-          >
+            >
             {createOrder => (
-
+              
               <StripeCheckout
               amount={calcTotalPrice(me.cart)}
               name="Sick Fits"
@@ -68,10 +67,12 @@ class TakeMyMoney extends Component {
               </StripeCheckout>
             )}
           </Mutation>
-        )}
+        )
+      }}
       </User>
     );
   }
 }
 
 export default TakeMyMoney;
+export { CREATE_ORDER_MUTATION };
